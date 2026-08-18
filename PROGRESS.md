@@ -363,6 +363,30 @@ grep -iE "error|failed" /tmp/opencode/qs.log | head
   overlay. `quickshell:overview`, `selection`
   rules exist. PanelWindow has NO `namespace` property in qmltypes (default
   namespace is `quickshell`) — `quickshell:overview` was pre-existing/unknown.
+
+## Bar icons render as "diamonds" (fixed)
+- Symptom (user): the battery icon and the brightness icon above ~40% look like a
+  diamond on a playing card. The glyphs in the QML source looked correct.
+- Investigation: all nerd-font codepoints verified present in the font
+  (fontTools cmap — no fallback). A standalone quickshell test window rendering
+  the exact strings at 64px confirmed Qt rasterizes the glyphs correctly.
+  Rendering the icons at 12px (PIL/FreeType, same renderer Qt uses) showed the
+  REAL cause: the Material icons are too detailed to survive 12px —
+  `md-brightness_4..7` (U+F00DD-F00E0) collapse into a tiny diamond/lozenge
+  exactly matching the user's description, and `md-battery_*` (U+F007A-F0084)
+  become unreadable zigzag blobs. This is a legibility/design issue, not a font
+  bug. (Grim screenshots are 2x scaled; the bar is at x=2698-2727 on the
+  2732-wide framebuffer, NOT x=1332 as assumed earlier.)
+- Fix:
+  - Backlight.qml: high-brightness icons replaced with the clean sun
+    `weather-day_sunny` (U+E30D, reads as a little sun with rays at 12px). Low
+    levels keep the weather moons (U+E3D5/E3D7/E3DA) the user liked.
+  - Battery.qml: the 11 `md-battery_*` icons swapped for the 5 simpler
+    FontAwesome battery glyphs `fa-battery_full/three_quarters/half/quarter/
+    empty` (U+F240-F244, solid battery shapes that read clearly at 12px), and the
+    level mapping changed from `capacity/10` to `capacity/100 * (len-1)`
+    (0-4). Charging bolt U+F0084 unchanged.
+
 - Keybinds (lines 441-442):
   `mainMod + N` -> `quickshell ipc -c ricegueh call ricegueh toggleNotifications`
   `mainMod + M` -> `quickshell ipc -c ricegueh call ricegueh toggleQuickSettings`

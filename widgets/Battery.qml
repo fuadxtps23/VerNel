@@ -16,7 +16,7 @@ Item {
 		return null
 	}
 
-	readonly property string icons: ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+	readonly property string icons: ["", "", "", "", ""]
 
 	readonly property int capacity: root.battery ? Math.round(root.battery.percentage * 100) : 0
 	readonly property bool charging: root.battery
@@ -28,7 +28,7 @@ Item {
 	readonly property string icon: {
 		if (!root.battery) return ""
 		if (root.charging) return "󰂄"
-		const level = Math.max(0, Math.min(root.icons.length - 1, Math.round(root.capacity / 10)))
+		const level = Math.max(0, Math.min(root.icons.length - 1, Math.round(root.capacity / 100 * (root.icons.length - 1))))
 		return root.icons[level]
 	}
 

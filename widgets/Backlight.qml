@@ -18,7 +18,7 @@ Item {
 		? Math.round(100 * root.brightness / root.maxBrightness)
 		: 0
 
-	readonly property string icons: ["", "", "", "󰃝", "󰃞", "󰃟", "󰃠"]
+	readonly property string icons: ["", "", "", "", "", "", ""]
 	readonly property string icon: {
 		const level = Math.floor(root.percent / 100 * root.icons.length)
 		return root.icons[Math.max(0, Math.min(root.icons.length - 1, level))]
