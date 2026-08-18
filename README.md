@@ -39,27 +39,42 @@ settings, audio and MPRIS.
 - [Hyprland](https://hyprland.org/) (0.56+ — uses the Lua `hyprctl eval` API)
 - JetBrainsMono Nerd Font
 - Optional but used: matugen, hyprlock, wlogout, nm-connection-editor,
-  blueman-manager, wlsunset
+  blueman-manager, hyprsunset
 
 ## Usage
 
-Run it as your shell (replace `ricegueh` with whatever you name the folder):
+1. Clone this repo
+2. Copy this repo or make a symbolic link to `~/.config/quickshell/`
+3. Run from terminal using `quickshell -c VerNel` or `qs -c VerNel`
 
-```sh
-quickshell -c ricegueh
+you can also add hyprland auto startup. this is an example:
+
+```lua
+hl.on("hyprland.start", function()
+    hl.exec_cmd("qs -c VerNel")
+end)
 ```
 
 ### Keybinds (via Hyprland IPC)
 
 ```sh
 # toggle notification center
-quickshell ipc -c ricegueh call ricegueh toggleNotifications
+quickshell ipc -c VerNel call VerNel toggleNotifications
 
 # toggle quick settings
-quickshell ipc -c ricegueh call ricegueh toggleQuickSettings
+quickshell ipc -c VerNel call VerNel toggleQuickSettings
+
+# toggle volume panel
+quickshell ipc -c VerNel call VerNel toggleAudioControls
+
+# toggle mpris widget
+quickshell ipc -c VerNel call VerNel toggleMprisDetail
+
+# toggle calendar widget
+quickshell ipc -c VerNel call VerNel toggleCalendar
 
 # hot-reload after theming
-quickshell ipc -c ricegueh call ricegueh reload
+quickshell ipc -c VerNel call VerNel reload
 ```
 
 ## Customization
@@ -80,4 +95,4 @@ PROGRESS.md        dev notes / quirks learned the hard way
 
 ## License
 
-Private hobby project — no license is granted for redistribution.
+Hobby project — just do anything you want with this.
