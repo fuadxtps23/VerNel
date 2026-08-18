@@ -1,4 +1,4 @@
-# VerNel — quickshell rice
+# VerNel — quickshell vertical panel
 
 A custom [quickshell](https://quickshell.outfoxxed.de/) desktop shell for
 [Hyprland](https://hyprland.org/), replacing waybar + swaync with a vertical
