@@ -85,6 +85,34 @@ quickshell ipc -c VerNel call VerNel reload
   `post_hook = 'quickshell ipc -c ricegueh call ricegueh reload'` to your
   `matugen/config.toml`.
 
+Matugen config.
+
+```toml
+[templates.quickshell]
+input_path = '~/.config/matugen/templates/quickshell-colors.qml'
+output_path = '~/.config/quickshell/ricegueh/matugen-colors.qml'
+post_hook = 'quickshell ipc -c ricegueh call ricegueh reload'
+```
+
+### Matugen Template
+
+```qml
+import QtQuick
+
+QtObject {
+	readonly property color background: "{{ colors.surface.default.hex }}"
+	readonly property color text: "{{ colors.on_surface.default.hex }}"
+	readonly property color primary: "{{ colors.primary.default.hex }}"
+	readonly property color secondary: "{{ colors.secondary.default.hex }}"
+	readonly property color accent: "{{ colors.primary_container.default.hex }}"
+	readonly property color accentText: "{{ colors.on_primary_container.default.hex }}"
+	readonly property color activeWorkspace: "{{ colors.on_primary.default.hex }}"
+	readonly property color critical: "{{ colors.error.default.hex }}"
+	readonly property color surfaceContainer: "{{ colors.surface_container.default.hex }}"
+	readonly property color surfaceContainerHigh: "{{ colors.surface_container_high.default.hex }}"
+}
+```
+
 ## Project layout
 
 ```
