@@ -46,6 +46,18 @@ ShellRoot {
 			if (ShellState.quickSettingsOpen) ShellState.closeAll()
 			else ShellState.openQuickSettings(ShellState.pointerScreen)
 		}
+		function toggleMprisDetail(): void {
+			if (ShellState.mprisDetailOpen) ShellState.closeAll()
+			else ShellState.openMprisDetail(ShellState.pointerScreen)
+		}
+		function toggleAudioControls(): void {
+			if (ShellState.audioControlsOpen) ShellState.closeAll()
+			else ShellState.openAudioControls(ShellState.pointerScreen)
+		}
+		function toggleCalendar(): void {
+			if (ShellState.calendarOpen) ShellState.closeAll()
+			else ShellState.openCalendar(ShellState.pointerScreen)
+		}
 		function reload(): void {
 			Quickshell.reload(false)
 		}
