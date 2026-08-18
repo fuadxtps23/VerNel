@@ -85,7 +85,7 @@ quickshell ipc -c VerNel call VerNel reload
   `post_hook = 'quickshell ipc -c ricegueh call ricegueh reload'` to your
   `matugen/config.toml`.
 
-Matugen config.
+### Matugen config example.
 
 ```toml
 [templates.quickshell]
