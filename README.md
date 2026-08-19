@@ -38,7 +38,7 @@ settings, audio and MPRIS.
 - [Hyprland](https://hyprland.org/) (0.56+ — uses the Lua `hyprctl eval` API)
 - [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads)
 - Optional but used: matugen, hyprlock, wlogout, nm-connection-editor,
-  blueman-manager, hyprsunset
+  blueman-manager, hyprsunset, [awww](https://codeberg.org/LGFae/awww)
 
 ## Usage
 
@@ -86,6 +86,7 @@ quickshell ipc -c VerNel call VerNel reload
   Point matugen's quickshell template at `matugen-colors.qml` and add
   `post_hook = 'quickshell ipc -c ricegueh call ricegueh reload'` to your
   `matugen/config.toml`.
+- For wallpaper selector, place your wallpaper in `~/Pictures/wallpapers/`
 
 ### Matugen config example.
 
