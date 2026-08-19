@@ -26,8 +26,10 @@ ShellRoot {
 			// of our toast.
 			notification.tracked = true
 			if (notification.lastGeneration) return
-			if (ShellState.dndEnabled) return
-			ShellState.lastNotification = notification
+			// Always record history (so the panel keeps entries while DND is
+			// on), but only surface the toast when notifications aren't muted.
+			if (!ShellState.dndEnabled)
+				ShellState.lastNotification = notification
 			ShellState.addHistory(notification)
 		}
 	}
