@@ -632,6 +632,7 @@ ShellPopup {
 		MirrorScreen {}
 		IdleInhibitor {}
 		QuickAction { icon: "󰂯"; label: "BT Panel"; onClicked: { ShellState.closeAll(); Quickshell.execDetached(["blueman-manager"]) } }
+		QuickAction { icon: "󰉏"; label: "Wallpaper"; onClicked: { ShellState.openWallpaperSelector(ShellState.pointerScreen) } }
 	}
 
 	// ---- helpers ----

@@ -402,6 +402,41 @@ grep -iE "error|failed" /tmp/opencode/qs.log | head
 - `function reload(): void { Quickshell.reload(false) }` added so matugen's
   post_hook can hot-reload: `quickshell ipc -c ricegueh call ricegueh reload`.
 
+## Wallpaper selector (new)
+- New `widgets/WallpaperSelector.qml`: ShellPopup (right-edge card, same layout
+  as quick settings) showing a thumbnail grid of images from
+  `$HOME/Pictures/wallpapers` (jpg/jpeg/png/gif/bmp/tiff/webp, recursive).
+  - Listing via `Process` + `StdioCollector` running `find ... | sort` (no
+    directory-listing component exists in Quickshell.Io on this build).
+  - Header has a Random (shuffle) and Rescan (refresh) button.
+  - Grid: GridView, 3 columns of 94x62 cells, max 420px tall, scrollable.
+    Thumbnails load with `sourceSize` 200x130 + `asynchronous` to keep memory low.
+  - Clicking applies via `awww img --transition-type any --transition-fps 60
+    --transition-duration 2 --transition-bezier .43,1.19,1,.4` then
+    `matugen --source-color-index 0 -t scheme-fidelity image <path>`.
+  - `--source-color-index 0` (most dominant color) is REQUIRED: matugen errors
+    with "Multiple source colors found ... terminal was not detected" when run
+    non-interactively (from quickshell execDetached) without a color selection.
+    `--prefer value` ALSO works but picks the BRIGHTEST color, not the dominant
+    one (a green wallpaper produced blue/teal). Also set as the default in
+    ~/.config/matugen/config.toml `[config] source_color_index = 0`.
+  - matugen's post_hook (`quickshell ipc -c ricegueh call ricegueh reload`)
+    regenerates matugen-colors.qml and hot-reloads the shell → bar colors update.
+  - Other wallpaper daemons (swaybg/hyprpaper/mpvpaper) are pkilled first,
+    matching the old rofi script; awww-daemon started if missing.
+  - Wallpaper daemon is `awww` (a swww fork, swww is NOT installed): binary at
+    /usr/local/bin/awww(-daemon), CLI is swww-compatible. Verified working.
+- shell.qml: `toggleWallpaperSelector` IPC added + `Variants { WallpaperSelector }`.
+- ShellState.qml: `wallpaperSelectorOpen` + `currentWallpaper` (for highlighting
+  the applied tile) + `openWallpaperSelector()` + `wallpaperSelectorBottom`
+  (toast host position); all popup openers close it and vice versa.
+- QuickSettings.qml: added a "Wallpaper" QuickAction (md-image U+F0409) that
+  opens the selector via openWallpaperSelector(pointerScreen).
+- Toast.qml: toasts sit below the wallpaper selector card while it's open.
+- Hyprland: `SUPER+SHIFT+W` rebinds from the old rofi WallpaperSelect.sh to
+  `quickshell ipc -c ricegueh call ricegueh toggleWallpaperSelector` in
+  ~/.config/hypr/hyprland.lua.
+
 ## MPRIS gotchas (player side)
 - Firefox (music.youtube) reports Position 0 and no mpris:length in GetAll —
   harmless; quickshell computes position internally on read.

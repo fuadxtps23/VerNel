@@ -33,9 +33,11 @@ ShellRoot {
 	}
 
 	// ---- Keybind IPC ----
-	// Allows Hyprland binds (SUPER+N / SUPER+M) to toggle the panels:
+	// Allows Hyprland binds (SUPER+N / SUPER+M / SUPER+SHIFT+W) to toggle the
+	// panels:
 	//   quickshell ipc -c ricegueh call ricegueh toggleNotifications
 	//   quickshell ipc -c ricegueh call ricegueh toggleQuickSettings
+	//   quickshell ipc -c ricegueh call ricegueh toggleWallpaperSelector
 	IpcHandler {
 		target: "ricegueh"
 		function toggleNotifications(): void {
@@ -57,6 +59,10 @@ ShellRoot {
 		function toggleCalendar(): void {
 			if (ShellState.calendarOpen) ShellState.closeAll()
 			else ShellState.openCalendar(ShellState.pointerScreen)
+		}
+		function toggleWallpaperSelector(): void {
+			if (ShellState.wallpaperSelectorOpen) ShellState.closeAll()
+			else ShellState.openWallpaperSelector(ShellState.pointerScreen)
 		}
 		function reload(): void {
 			Quickshell.reload(false)
@@ -99,6 +105,10 @@ ShellRoot {
 	Variants {
 		model: Quickshell.screens
 		Calendar {}
+	}
+	Variants {
+		model: Quickshell.screens
+		WallpaperSelector {}
 	}
 	Variants {
 		model: Quickshell.screens

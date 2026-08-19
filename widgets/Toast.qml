@@ -24,9 +24,9 @@ PanelWindow {
 		right: Config.barWidth + Config.barMarginRight + 8
 	}
 
-	// Sits below whichever panel is open (quick settings, audio controls or the
-	// calendar), otherwise at the top under the bar. Animates so toasts slide
-	// between positions.
+	// Sits below whichever panel is open (quick settings, audio controls, the
+	// calendar or the wallpaper selector), otherwise at the top under the bar.
+	// Animates so toasts slide between positions.
 	property real toastTop: ShellState.quickSettingsOpen
 		&& ShellState.quickSettingsBottom > 0
 		? ShellState.quickSettingsBottom + 8
@@ -34,7 +34,10 @@ PanelWindow {
 			? ShellState.audioControlsBottom + 8
 			: ShellState.calendarOpen && ShellState.calendarBottom > 0
 				? ShellState.calendarBottom + 8
-				: Config.barMarginTop
+				: ShellState.wallpaperSelectorOpen
+					&& ShellState.wallpaperSelectorBottom > 0
+					? ShellState.wallpaperSelectorBottom + 8
+					: Config.barMarginTop
 	Behavior on toastTop {
 		NumberAnimation { duration: Config.animMedium; easing.type: Easing.OutCubic }
 	}

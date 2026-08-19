@@ -12,6 +12,10 @@ Singleton {
 	property bool audioControlsOpen: false
 	property bool calendarOpen: false
 	property bool wifiHistoryOpen: false
+	property bool wallpaperSelectorOpen: false
+
+	// Last wallpaper applied from the selector (highlighted in the grid).
+	property string currentWallpaper: ""
 
 	property bool dndEnabled: false
 
@@ -25,6 +29,9 @@ Singleton {
 
 	// Same for the calendar card.
 	property real calendarBottom: 0
+
+	// Same for the wallpaper selector card.
+	property real wallpaperSelectorBottom: 0
 
 	// ---- OSD overlay (keyboard locks / volume / brightness) ----
 	// Driven by OsdMonitor; cleared by its 3s hide timer.
@@ -60,6 +67,7 @@ Singleton {
 
 	readonly property bool anyPopupOpen: root.quickSettingsOpen || root.notificationsOpen
 		|| root.mprisDetailOpen || root.audioControlsOpen || root.calendarOpen
+		|| root.wallpaperSelectorOpen
 
 	function onPopupScreen(screen) {
 		return screen !== undefined && screen !== null ? screen : root.pointerScreen
@@ -74,6 +82,7 @@ Singleton {
 		root.audioControlsOpen = false
 		root.calendarOpen = false
 		root.wifiHistoryOpen = false
+		root.wallpaperSelectorOpen = false
 	}
 
 	function openNotifications(screen) {
@@ -84,6 +93,7 @@ Singleton {
 		root.audioControlsOpen = false
 		root.calendarOpen = false
 		root.wifiHistoryOpen = false
+		root.wallpaperSelectorOpen = false
 	}
 
 	function openMprisDetail(screen) {
@@ -94,6 +104,7 @@ Singleton {
 		root.audioControlsOpen = false
 		root.calendarOpen = false
 		root.wifiHistoryOpen = false
+		root.wallpaperSelectorOpen = false
 	}
 
 	function openAudioControls(screen) {
@@ -104,6 +115,7 @@ Singleton {
 		root.mprisDetailOpen = false
 		root.calendarOpen = false
 		root.wifiHistoryOpen = false
+		root.wallpaperSelectorOpen = false
 	}
 
 	function openCalendar(screen) {
@@ -114,6 +126,18 @@ Singleton {
 		root.mprisDetailOpen = false
 		root.audioControlsOpen = false
 		root.wifiHistoryOpen = false
+		root.wallpaperSelectorOpen = false
+	}
+
+	function openWallpaperSelector(screen) {
+		root.popupScreen = root.onPopupScreen(screen)
+		root.wallpaperSelectorOpen = true
+		root.quickSettingsOpen = false
+		root.notificationsOpen = false
+		root.mprisDetailOpen = false
+		root.audioControlsOpen = false
+		root.calendarOpen = false
+		root.wifiHistoryOpen = false
 	}
 
 	function closeAll() {
@@ -123,6 +147,7 @@ Singleton {
 		root.audioControlsOpen = false
 		root.calendarOpen = false
 		root.wifiHistoryOpen = false
+		root.wallpaperSelectorOpen = false
 	}
 
 	// ---- notification history ----
