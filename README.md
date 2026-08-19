@@ -126,4 +126,4 @@ PROGRESS.md        dev notes / quirks learned the hard way
 
 ## Screenshots
 
-> Coming Soon...
+![Overall Look](screenshots/overall.png)
