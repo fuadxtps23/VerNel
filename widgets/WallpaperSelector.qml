@@ -3,8 +3,9 @@ import Quickshell
 import Quickshell.Io
 
 // Wallpaper picker: a grid of thumbnails from ~/Pictures/wallpapers. Clicking
-// one applies it via awww and regenerates the matugen color scheme (whose
-// post_hook reloads quickshell, so the bar colors update immediately).
+// one first regenerates the matugen color scheme (whose post_hook reloads
+// quickshell, so the bar colors update immediately) and then applies the
+// wallpaper via awww.
 ShellPopup {
 	id: root
 
@@ -50,13 +51,14 @@ ShellPopup {
 	}
 
 	// Kill other wallpaper daemons (matching the old rofi script), make sure
-	// awww-daemon is up, then set the image and regenerate matugen colors.
+	// awww-daemon is up, then regenerate matugen colors and finally set the
+	// image via awww.
 	function applyWallpaper(path) {
 		if (!path) return
 		ShellState.currentWallpaper = path
 		ShellState.closeAll()
 		Quickshell.execDetached(["/bin/sh", "-c",
-			`pkill -x swaybg 2>/dev/null; pkill -x hyprpaper 2>/dev/null; pkill -x mpvpaper 2>/dev/null; if ! pgrep -x awww-daemon >/dev/null 2>&1; then awww-daemon >/dev/null 2>&1 & fi; awww img "${path}" --transition-type any --transition-fps 60 --transition-duration 2 --transition-bezier .43,1.19,1,.4; matugen --source-color-index 0 -t scheme-fidelity image "${path}"`])
+			`pkill -x swaybg 2>/dev/null; pkill -x hyprpaper 2>/dev/null; pkill -x mpvpaper 2>/dev/null; if ! pgrep -x awww-daemon >/dev/null 2>&1; then awww-daemon >/dev/null 2>&1 & fi; matugen --source-color-index 0 -t scheme-fidelity image "${path}" && awww img "${path}" --transition-type any --transition-fps 60 --transition-duration 2 --transition-bezier .43,1.19,1,.4`])
 	}
 
 	function applyRandom() {

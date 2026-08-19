@@ -56,8 +56,8 @@ Item {
 		}
 		onWheel: {
 			if (!root.node) return
-			// Normal scroll ±5%, shift+scroll ±1%.
-			const step = (wheel.modifiers & Qt.ShiftModifier) ? 0.01 : 0.05
+			// Normal scroll ±1%, shift+scroll ±5%.
+			const step = (wheel.modifiers & Qt.ShiftModifier) ? 0.05 : 0.01
 			const delta = wheel.angleDelta.y > 0 ? step : -step
 			root.node.audio.volume = Math.max(0, Math.min(1, root.node.audio.volume + delta))
 		}

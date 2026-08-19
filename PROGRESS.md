@@ -411,9 +411,11 @@ grep -iE "error|failed" /tmp/opencode/qs.log | head
   - Header has a Random (shuffle) and Rescan (refresh) button.
   - Grid: GridView, 3 columns of 94x62 cells, max 420px tall, scrollable.
     Thumbnails load with `sourceSize` 200x130 + `asynchronous` to keep memory low.
-  - Clicking applies via `awww img --transition-type any --transition-fps 60
-    --transition-duration 2 --transition-bezier .43,1.19,1,.4` then
-    `matugen --source-color-index 0 -t scheme-fidelity image <path>`.
+  - Clicking applies in two steps: `matugen --source-color-index 0 -t scheme-fidelity
+    image <path>` FIRST (regenerates colors + post_hook hot-reloads quickshell),
+    then `awww img <path> --transition-type any --transition-fps 60
+    --transition-duration 2 --transition-bezier .43,1.19,1,.4` to swap the
+    wallpaper (chained with && so matugen must succeed first).
   - `--source-color-index 0` (most dominant color) is REQUIRED: matugen errors
     with "Multiple source colors found ... terminal was not detected" when run
     non-interactively (from quickshell execDetached) without a color selection.
@@ -424,6 +426,7 @@ grep -iE "error|failed" /tmp/opencode/qs.log | head
     regenerates matugen-colors.qml and hot-reloads the shell → bar colors update.
   - Other wallpaper daemons (swaybg/hyprpaper/mpvpaper) are pkilled first,
     matching the old rofi script; awww-daemon started if missing.
+  - Volume.qml: normal scroll = ±1% volume, shift+scroll = ±5%.
   - Wallpaper daemon is `awww` (a swww fork, swww is NOT installed): binary at
     /usr/local/bin/awww(-daemon), CLI is swww-compatible. Verified working.
 - shell.qml: `toggleWallpaperSelector` IPC added + `Variants { WallpaperSelector }`.
