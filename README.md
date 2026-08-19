@@ -120,6 +120,6 @@ widgets/           every module + popup
 PROGRESS.md        dev notes / quirks learned the hard way
 ```
 
-## License
+## Screenshots
 
-Hobby project — just do anything you want with this.
+> Coming Soon...
