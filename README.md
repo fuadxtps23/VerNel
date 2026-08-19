@@ -72,6 +72,9 @@ quickshell ipc -c VerNel call VerNel toggleMprisDetail
 # toggle calendar widget
 quickshell ipc -c VerNel call VerNel toggleCalendar
 
+# toggle wallpaper selector
+quickshell ipc -c VerNel call VerNel toggleWallpaperSelector
+
 # hot-reload after theming
 quickshell ipc -c VerNel call VerNel reload
 ```
