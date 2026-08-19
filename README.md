@@ -126,4 +126,30 @@ PROGRESS.md        dev notes / quirks learned the hard way
 
 ## Screenshots
 
+Overall Look
+
 ![Overall Look](screenshots/overall.png)
+
+Notification Panel
+
+![Notification Panel](screenshots/notification_center.png)
+
+Calendar Widget
+
+![Calendar Widget](screenshots/calendar.png)
+
+Volume Panel
+
+![Volume Panel](screenshots/volume_panel.png)
+
+Quick Settings
+
+![Quick Settings](screenshots/quick_settings.png)
+
+Wallpaper Selector
+
+![Wallpaper Selector](screenshots/wallpaper_selector.png)
+
+Mpris Widget
+
+![Mpris Widget](screenshots/mpris_widget.png)
