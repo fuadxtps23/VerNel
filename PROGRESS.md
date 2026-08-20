@@ -440,6 +440,31 @@ grep -iE "error|failed" /tmp/opencode/qs.log | head
   `quickshell ipc -c ricegueh call ricegueh toggleWallpaperSelector` in
   ~/.config/hypr/hyprland.lua.
 
+## Ethernet "Disconnected" on unmanaged NICs (fixed)
+- Symptom: on the desktop PC the Ethernet row showed "Disconnected" even though
+  `enp3s0` was UP with `192.168.10.18/24` and internet worked. Root cause:
+  NetworkManager marks the link "unmanaged" (NIC configured outside NM), so
+  quickshell's `NetworkDevice.connected` is false / the device may not even be
+  listed in `Networking.devices`.
+- Fix in `widgets/QuickSettings.qml`:
+  - `refreshEthernetIp()` now falls back to `nmcli`: when `wiredDevices` is
+    empty it runs
+    `D=$(nmcli -t -f DEVICE,TYPE dev status | grep -iE ':ethernet' | head -1 | cut -d: -f1); [ -n "$D" ] && printf '%s\n' "$D" && nmcli -g IP4.ADDRESS dev show "$D"`.
+    The collector (StdioCollector) parses "DEVNAME\nIP/prefix" (≥2 lines → first
+    line is the device name) and stores both `ethernetDeviceName` and
+    `ethernetIpv4`.
+  - New `readonly ethernetRows` property: quickshell's wired devices when NM
+    manages them, else a synthesized `[{name: ethernetDeviceName, address: ""}]`
+    so the dropdown still lists the link. `ethernetDeviceName` must be declared
+    BEFORE `ethernetRows` (QML init-order — declaring it after produced
+    `TypeError: Cannot read property 'length' of undefined` at line 397).
+  - `ethernetConnected` falls back to `ethernetRows.length > 0 &&
+    ethernetIpv4.length > 0` (has a real IPv4), since `d.connected` is false for
+    unmanaged links. The dropdown delegate now keys off `ethernetConnected` /
+    `ethernetRows` instead of `modelData.connected` / `wiredDevices`.
+- Verified on the PC: debug log showed `dev=enp3s0 ip=192.168.10.18 rows=1
+  conn=true` after opening the panel; no QML errors in the current generation.
+
 ## MPRIS gotchas (player side)
 - Firefox (music.youtube) reports Position 0 and no mpris:length in GetAll —
   harmless; quickshell computes position internally on read.
@@ -453,6 +478,11 @@ grep -iE "error|failed" /tmp/opencode/qs.log | head
   If it recurs: likely an app bypassing the freedesktop daemon. (tracking fix
   should cover server-side untracked case.)
 - User may want more modules / polish on any widget.
+- PC (desktop, no wifi/bluetooth hardware): the WiFi/Bluetooth grey-out
+  ("Not available") was confirmed by the user before the restart; the Ethernet
+  fix is implemented + verified via runtime log. Still to do on the PC after the
+  reboot: visually confirm the Ethernet row now shows "192.168.10.18" /
+  connected state in the panel.
 - Brightness responsiveness: OSD/bar lag the screen slightly (polling 300ms/2s
   vs event-driven volume). `brightnessctl monitor` exists but emits raw value
   only; user said "everything is done anyway" — not pursuing.

@@ -37,10 +37,13 @@ ShellPopup {
 		icon: "󰖩"
 		label: "Wi-Fi"
 		sublabel: {
+			if (!root.wifiDevice) return "Not available"
 			if (!root.wifiEnabled) return "Off"
 			return root.wifiSsid ? root.wifiSsid : "Not connected"
 		}
-		checked: root.wifiEnabled
+		checked: root.wifiDevice !== null && root.wifiEnabled
+		enabled: root.wifiDevice !== null
+		opacity: root.wifiDevice ? 1 : 0.45
 		expandable: true
 		expanded: root.wifiExpanded
 		onToggled: {
@@ -330,7 +333,7 @@ ShellPopup {
 		expanded: root.ethernetExpanded
 
 		Repeater {
-			model: root.wiredDevices
+			model: root.ethernetRows
 
 			delegate: Item {
 				required property var modelData
@@ -338,8 +341,8 @@ ShellPopup {
 				height: 44
 
 				Text {
-					text: modelData.connected ? "󰛳" : "󰛲"
-					color: modelData.connected ? Config.activeWorkspace : Config.accent
+					text: root.ethernetConnected ? "󰛳" : "󰛲"
+					color: root.ethernetConnected ? Config.activeWorkspace : Config.accent
 					font { family: Config.fontFamily; pixelSize: 12 }
 					anchors.verticalCenter: parent.verticalCenter
 					anchors.left: parent.left
@@ -348,8 +351,8 @@ ShellPopup {
 
 				Text {
 					text: modelData.name || "Ethernet"
-					color: modelData.connected ? Config.text : Config.accent
-					font { family: Config.fontFamily; pixelSize: 12; bold: modelData.connected }
+					color: root.ethernetConnected ? Config.text : Config.accent
+					font { family: Config.fontFamily; pixelSize: 12; bold: root.ethernetConnected }
 					elide: Text.ElideRight
 					anchors.verticalCenter: parent.verticalCenter
 					anchors.left: parent.left
@@ -372,7 +375,7 @@ ShellPopup {
 				}
 
 				Text {
-					text: modelData.connected
+					text: root.ethernetConnected
 						? (root.ethernetIpv4 || "No IP") : "Disconnected"
 					color: Config.secondary
 					font { family: Config.fontFamily; pixelSize: 11 }
@@ -391,7 +394,7 @@ ShellPopup {
 			font { family: Config.fontFamily; pixelSize: 11 }
 			width: parent.width
 			padding: 6
-			visible: root.wiredDevices.length === 0
+			visible: root.ethernetRows.length === 0
 		}
 	}
 
@@ -399,14 +402,18 @@ ShellPopup {
 	ToggleRow {
 		icon: "󰂯"
 		label: "Bluetooth"
-		sublabel: root.bluetoothBlocked
-			? "Blocked"
-			: (root.bluetoothOn
-				? (root.btInRange.length > 0
-					? `${root.btInRange.length} device${root.btInRange.length === 1 ? "" : "s"}`
-					: (root.btScanning ? "Scanning…" : "No devices"))
-				: "Off")
-		checked: root.bluetoothOn
+		sublabel: !Bluetooth.defaultAdapter
+			? "Not available"
+			: (root.bluetoothBlocked
+				? "Blocked"
+				: (root.bluetoothOn
+					? (root.btInRange.length > 0
+						? `${root.btInRange.length} device${root.btInRange.length === 1 ? "" : "s"}`
+						: (root.btScanning ? "Scanning…" : "No devices"))
+					: "Off"))
+		checked: Bluetooth.defaultAdapter !== null && root.bluetoothOn
+		enabled: Bluetooth.defaultAdapter !== null
+		opacity: Bluetooth.defaultAdapter ? 1 : 0.45
 		expandable: true
 		expanded: root.bluetoothExpanded
 		onToggled: {
@@ -773,7 +780,11 @@ ShellPopup {
 		for (const d of Networking.devices.values) {
 			if (d.type === DeviceType.Wired && d.connected) return true
 		}
-		return false
+		// NetworkManager marks some interfaces "unmanaged" (e.g. a desktop
+		// NIC configured outside NM) — quickshell then reports them as
+		// disconnected. Fall back to "has a real IPv4", which nmcli returns
+		// even for unmanaged links that are up.
+		return root.ethernetRows.length > 0 && root.ethernetIpv4.length > 0
 	}
 
 	// Ethernet IPv4 is fetched via nmcli (quickshell's NetworkDevice.address
@@ -786,18 +797,33 @@ ShellPopup {
 		running: false
 		stdout: StdioCollector {
 			onStreamFinished: {
-				const raw = text.trim()
-				if (!raw) { root.ethernetIpv4 = ""; return }
-				const slash = raw.indexOf('/')
-				root.ethernetIpv4 = slash > 0 ? raw.slice(0, slash) : raw
+				// nmcli fallback prints "DEVNAME\nIP/prefix", the normal path
+				// prints just "IP/prefix" (device name set in JS beforehand).
+				const lines = text.trim().split('\n')
+				if (lines.length >= 2) {
+					root.ethernetDeviceName = lines[0].trim()
+				}
+				const last = lines[lines.length - 1] || ""
+				const slash = last.indexOf('/')
+				root.ethernetIpv4 = slash > 0 ? last.slice(0, slash) : ""
 			}
 		}
 	}
 
 	function refreshEthernetIp() {
+		// Use the first wired device quickshell knows about, else ask nmcli for
+		// the first ethernet interface. The nmcli fallback is what keeps this
+		// working when NetworkManager marks the link "unmanaged" (e.g. a desktop
+		// NIC configured outside NM) — quickshell then reports no wired device.
 		const devs = root.wiredDevices
-		if (!devs.length) { root.ethernetIpv4 = ""; return }
-		ethIpProc.command = ["nmcli", "-g", "IP4.ADDRESS", "dev", "show", devs[0].name]
+		if (devs.length) {
+			root.ethernetDeviceName = devs[0].name
+			ethIpProc.command = ["nmcli", "-g", "IP4.ADDRESS", "dev", "show", devs[0].name]
+			ethIpProc.running = true
+			return
+		}
+		ethIpProc.command = ["/bin/sh", "-c",
+			`D=$(nmcli -t -f DEVICE,TYPE dev status | grep -iE ':ethernet' | head -1 | cut -d: -f1); if [ -n "$D" ]; then printf '%s\n' "$D"; nmcli -g IP4.ADDRESS dev show "$D"; fi`]
 		ethIpProc.running = true
 	}
 
@@ -816,6 +842,17 @@ ShellPopup {
 			if (d.type === DeviceType.Wired) out.push(d)
 		}
 		return out
+	}
+
+	property string ethernetDeviceName: ""
+
+	// Rows for the ethernet dropdown. Uses quickshell's wired devices when
+	// NetworkManager manages them; otherwise synthesizes one from the nmcli
+	// fallback (ethernetDeviceName) so unmanaged-but-up links still appear.
+	readonly property var ethernetRows: {
+		const devs = root.wiredDevices
+		if (devs.length) return devs
+		return root.ethernetDeviceName ? [{ name: root.ethernetDeviceName, address: "" }] : []
 	}
 
 	readonly property bool bluetoothOn: Bluetooth.defaultAdapter
