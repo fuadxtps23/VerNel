@@ -1,0 +1,147 @@
+/*
+* GTK Colors
+* Generated with Matugen
+*/
+
+:root {
+  --primary: #47f4aa;
+  --on_primary: #003822;
+  --primary_container: #0bd790;
+  --on_primary_container: #003722;
+  --inverse_primary: #006c46;
+  --primary_fixed: #55feb3;
+  --primary_fixed_dim: #29e199;
+  --on_primary_fixed: #002112;
+  --on_primary_fixed_variant: #005234;
+
+  --secondary: #98d3b1;
+  --on_secondary: #003822;
+  --secondary_container: #185338;
+  --on_secondary_container: #b5f1cd;
+  --secondary_fixed: #b4f0cc;
+  --secondary_fixed_dim: #98d3b1;
+  --on_secondary_fixed: #002112;
+  --on_secondary_fixed_variant: #155036;
+
+  --tertiary: #ffd0ab;
+  --on_tertiary: #4c2700;
+  --tertiary_container: #ffaa5e;
+  --on_tertiary_container: #4b2600;
+  --tertiary_fixed: #ffdcc2;
+  --tertiary_fixed_dim: #ffb77a;
+  --on_tertiary_fixed: #2e1500;
+  --on_tertiary_fixed_variant: #6d3a00;
+
+  --error: #ffb4ab;
+  --on_error: #690005;
+  --error_container: #93000a;
+  --on_error_container: #ffdad6;
+
+  --surface_dim: #0d1510;
+  --surface: #0d1510;
+  --surface_tint: #29e199;
+  --surface_bright: #333b35;
+  --surface_container_lowest: #08100b;
+  --surface_container_low: #151d18;
+  --surface_container: #19211c;
+  --surface_container_high: #242c26;
+  --surface_container_highest: #2e3731;
+  --surface_variant: #3c4a41;
+  --on_surface: #dce5dc;
+  --on_surface_variant: #bacbbe;
+
+  --outline: #859589;
+  --outline_variant: #3c4a41;
+
+  --inverse_surface: #dce5dc;
+  --inverse_on_surface: #2a322d;
+
+  --background: #0d1510;
+  --on_background: #dce5dc;
+
+  --shadow: #000000;
+  --scrim: #000000;
+  --source_color: #0bd790;
+}
+
+/* Core Theme Colors */
+@define-color theme_fg_color #dce5dc;
+@define-color theme_text_color #dce5dc;
+@define-color theme_bg_color #0d1510;
+@define-color theme_base_color #19211c;
+@define-color theme_selected_bg_color #47f4aa;
+@define-color theme_selected_fg_color #003822;
+@define-color insensitive_bg_color #151d18;
+@define-color insensitive_fg_color #bacbbe;
+@define-color insensitive_base_color #0d1510;
+
+/* Backdrop / Unfocused Windows */
+@define-color theme_unfocused_fg_color #bacbbe;
+@define-color theme_unfocused_text_color #bacbbe;
+@define-color theme_unfocused_bg_color #0d1510;
+@define-color theme_unfocused_base_color #151d18;
+@define-color theme_unfocused_selected_bg_color #185338;
+@define-color theme_unfocused_selected_fg_color #b5f1cd;
+@define-color unfocused_insensitive_color #bacbbe;
+@define-color borders #3c4a41;
+@define-color unfocused_borders #3c4a41;
+
+/* Status Colors */
+@define-color warning_color #ffd0ab;
+@define-color error_color #ffb4ab;
+@define-color success_color #47f4aa;
+
+/* Window Manager */
+@define-color wm_focused_title #47f4aa;
+@define-color wm_unfocused_title #bacbbe;
+@define-color wm_highlight #47f4aa;
+@define-color wm_border #000000;
+@define-color wm_focused_bg #0d1510;
+@define-color wm_unfocused_bg #0d1510;
+@define-color wm_button_icon #dce5dc;
+@define-color wm_button_focused_bg #19211c;
+@define-color wm_button_unfocused_bg #151d18;
+@define-color wm_button_hover_fg #003722;
+@define-color wm_button_active_fg #003722;
+@define-color wm_button_hover_bg #0bd790;
+@define-color wm_button_active_bg #0bd790;
+
+/* Content & Text Views */
+@define-color content_view_bg #19211c;
+@define-color placeholder_text_color #47f4aa;
+@define-color text_view_bg #19211c;
+
+/* GTK4 / Libadwaita Named Colors */
+@define-color accent_bg_color #0bd790;
+@define-color accent_fg_color #003722;
+@define-color accent_color #47f4aa;
+@define-color destructive_bg_color #93000a;
+@define-color destructive_fg_color #ffdad6;
+@define-color destructive_color #ffb4ab;
+@define-color success_bg_color #185338;
+@define-color success_fg_color #b5f1cd;
+@define-color success_color #47f4aa;
+@define-color warning_bg_color #ffaa5e;
+@define-color warning_fg_color #003722;
+@define-color warning_color #ffd0ab;
+@define-color error_bg_color #93000a;
+@define-color error_fg_color #ffdad6;
+@define-color error_color #ffb4ab;
+@define-color window_bg_color #0d1510;
+@define-color window_fg_color #dce5dc;
+@define-color view_bg_color #19211c;
+@define-color view_fg_color #dce5dc;
+@define-color headerbar_bg_color #0d1510;
+@define-color headerbar_fg_color #47f4aa;
+@define-color headerbar_border_color #3c4a41;
+@define-color headerbar_backdrop_color #0d1510;
+@define-color headerbar_shade_color #000000;
+@define-color card_bg_color #19211c;
+@define-color card_fg_color #dce5dc;
+@define-color card_shade_color #000000;
+@define-color dialog_bg_color #242c26;
+@define-color dialog_fg_color #dce5dc;
+@define-color popover_bg_color #242c26;
+@define-color popover_fg_color #dce5dc;
+@define-color shade_color #000000;
+@define-color scrollbar_outline_color #3c4a41;
